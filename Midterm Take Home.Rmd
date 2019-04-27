@@ -7,10 +7,16 @@ output: html_document
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+#install.packages("glue")
+library(glue)
+library(rio)
+
+```
+```{r Part A 1}
 
 
 ```
-
 
 
 ```{r cars}
