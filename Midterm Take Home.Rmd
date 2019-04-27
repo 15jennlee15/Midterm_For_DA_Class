@@ -1,0 +1,26 @@
+---
+title: "Midterm Take Home Portion"
+author: "Jenn Lewis, Tamara Niella"
+date: "4/27/2019"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+```
+
+
+
+```{r cars}
+summary(cars)
+```
+
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+
