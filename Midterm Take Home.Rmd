@@ -56,8 +56,8 @@ data %<>%
 ```{r Part A Question 2}
 #Calculate the cumulative n for each school by student_group, grade, and academic_year.
 data <- data %>%
-  group_by(student_group, grade_level, academic_year) %>%
-  mutate(cn = map(school, cumsum(n)))
+  group_by(school,student_group, grade_level, academic_year) %>%
+  mutate(cn = cumsum(n))
 
 ```
 
