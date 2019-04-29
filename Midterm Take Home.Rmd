@@ -9,10 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(cache = TRUE)
 #install.packages("glue")
+#install.packages("pracma")
 library(glue)
 library(rio)
 library(purrr)
 library(tidyverse)
+library(pracma)
 
 ```
 
@@ -55,15 +57,29 @@ data %<>%
 #Calculate the cumulative n for each school by student_group, grade, and academic_year.
 data <- data %>%
   group_by(student_group, grade_level, academic_year) %>%
-  mutate(cn = map(school, ~cumsum(.x)))
+  mutate(cn = map(school, cumsum(n)))
+
+```
+
+
+
+```{r Part A Question 3}
+data %<>%
+  select(data, -n) %<%
+  spread(student_group, cn) %>%
+  filter(!is.na(white) |
+           ~!is.na(hispanic/latino))
 
 
 ```
 
-
-
-```{r }
-
-```
+```{r Part B Question 1}
+gap <- function(data, ref, foc) {
+    x <- data[[ref]]
+    y <- data[[foc]]
+    auc <- pracma::trapz(y / y[length(x)],
+                         x / x[length(x)])
+    sqrt(2)*qnorm(auc)
+}
 
 
