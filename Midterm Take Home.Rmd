@@ -11,9 +11,24 @@ knitr::opts_chunk$set(cache = TRUE)
 #install.packages("glue")
 library(glue)
 library(rio)
+library(purrr)
 
 ```
+
 ```{r Part A 1}
+download_file <- function(year) {
+    link <- glue::glue("https://www.oregon.gov/ode/educator-resources/assessment/TestResults20{year}/pagr_schools_ela_raceethnicity_{year-1}{year}.xlsx")
+    rio::import(link, setclass = "tibble", na = c("-", "--", "*"))
+}
+
+data <- map_df(15:18, download_file, .id = "year_link")
+
+#Clean Data Renamed Data to not override original data set
+
+link_filtered <- link %>%
+  filter(student_group == "White" | student_group == "Hispanic/Latino") %>%
+  select() %>%
+  filter(n != "NA")
 
 
 ```
