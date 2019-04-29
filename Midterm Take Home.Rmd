@@ -56,7 +56,9 @@ data %<>%
 ```{r Part A Question 2}
 #Calculate the cumulative n for each school by student_group, grade, and academic_year.
 data <- data %>%
+  #group data
   group_by(school,student_group, grade_level, academic_year) %>%
+  #create cn variable
   mutate(cn = cumsum(n))
 
 ```
@@ -65,10 +67,16 @@ data <- data %>%
 
 ```{r Part A Question 3}
 data %<>%
-  select(data, -n) %<%
+  #drop n column
+  select(everything(), -n) %>%
+  #spread the student_group out into two columns
   spread(student_group, cn) %>%
-  filter(!is.na(white) |
-           ~!is.na(hispanic/latino))
+  #filter out missing data
+  filter(!is.na(White))
+
+#don't know why but couldn't get this to work in the pipe so I did it seperately
+data <- data %>%
+  filter(!is.na(`Hispanic/Latino`))
 
 
 ```
