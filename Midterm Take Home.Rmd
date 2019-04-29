@@ -36,8 +36,7 @@ data %<>%
   filter(student_group == "White" | 
          student_group == "Hispanic/Latino") %>%
   #select variables, drop percentages and collapsed levels
-  select(year_link,
-         academic_year,
+  select(academic_year,
          district,
          school,
          student_group,
@@ -96,9 +95,10 @@ gap <- function(data, ref, foc) {
 
 #Estimate an achievement gap effect size for every school in the state that reported data on both student groups (i.e., using the data we created above), for each grade level in each academic year.
 
-effect_size <- gap(data[2:5, ], "white", "hispanic_latino")
+achievement_gap <- data %>%
+  group_by(school, grade_level, academic_year) %>%
+  mutate(effect_size = gap(achievement_gap[1:4, ], "white", "hispanic_latino"))
 
-
-         
+gap(data[2:5, ], "white", "hispanic_latino")
 ```
 
