@@ -48,18 +48,22 @@ data %<>%
   #remove missing data
   filter(!is.na(n))
 
+```
+
+
+```{r Part A Question 2}
+#Calculate the cumulative n for each school by student_group, grade, and academic_year.
+data <- data %>%
+  group_by(student_group, grade_level, academic_year) %>%
+  mutate(cn = map(school, ~cumsum(.x)))
+
 
 ```
 
 
-```{r cars}
-summary(cars)
-```
 
+```{r }
 
-
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
 

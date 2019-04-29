@@ -191,7 +191,59 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE)</code></pre>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+#install.packages(&quot;glue&quot;)
+library(glue)</code></pre>
+<pre><code>## Warning: package 'glue' was built under R version 3.5.2</code></pre>
+<pre class="r"><code>library(rio)
+library(purrr)</code></pre>
+<pre><code>## Warning: package 'purrr' was built under R version 3.5.2</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.1.0       ✔ readr   1.3.1  
+## ✔ tibble  2.0.1       ✔ dplyr   0.8.0.1
+## ✔ tidyr   0.8.3       ✔ stringr 1.4.0  
+## ✔ ggplot2 3.1.0       ✔ forcats 0.4.0</code></pre>
+<pre><code>## Warning: package 'tibble' was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package 'tidyr' was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package 'dplyr' was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package 'stringr' was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package 'forcats' was built under R version 3.5.2</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::collapse() masks glue::collapse()
+## ✖ dplyr::filter()   masks stats::filter()
+## ✖ dplyr::lag()      masks stats::lag()</code></pre>
+<pre class="r"><code>#Function to download data from link
+download_file &lt;- function(year) {
+    link &lt;- glue::glue(&quot;https://www.oregon.gov/ode/educator-resources/assessment/TestResults20{year}/pagr_schools_ela_raceethnicity_{year-1}{year}.xlsx&quot;)
+    rio::import(link, setclass = &quot;tibble&quot;, na = c(&quot;-&quot;, &quot;--&quot;, &quot;*&quot;))
+}
+
+#Load data from multiple years and bind into single data frame
+data &lt;- map_df(15:18, download_file, .id = &quot;year_link&quot;)
+
+#Clean Data
+data %&lt;&gt;%
+  #clean names
+  janitor::clean_names() %&gt;%
+  #filter for white and hispanic/latino students
+  filter(student_group == &quot;White&quot; | 
+         student_group == &quot;Hispanic/Latino&quot;) %&gt;%
+  #select variables, drop percentages and collapsed levels
+  select(year_link,
+         academic_year,
+         district,
+         school,
+         student_group,
+         grade_level,
+         starts_with(&quot;number_level&quot;)) %&gt;%
+  #gather number_level data to be two columns, level and n
+  gather(&quot;level&quot;, &quot;n&quot;, starts_with(&quot;number_level&quot;)) %&gt;%
+  #Convert level to a number, remove number_level_
+  mutate(level = parse_number(level)) %&gt;%
+  #remove missing data
+  filter(!is.na(n))</code></pre>
 <pre class="r"><code>summary(cars)</code></pre>
 <pre><code>##      speed           dist       
 ##  Min.   : 4.0   Min.   :  2.00  
