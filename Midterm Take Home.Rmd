@@ -110,8 +110,11 @@ nested_data <- data %>%
   nest()
 
 #create achievement gap effect size by looping through each data frame
-nested_data %>% 
+nested_data <- nested_data%>% 
   mutate(es = map_dbl(data, ~gap(.x, "white", "hispanic_latino")))
 
 ```
 
+
+
+```
