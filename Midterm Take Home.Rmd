@@ -49,12 +49,20 @@ data %<>%
   #remove missing data
   filter(!is.na(n))
 
+#Convert variables to factors
+data <- data %>%
+  mutate(academic_year = as.factor(academic_year),
+         level = as.factor(level), 
+         grade_level = as.factor(grade_level))
+
 ```
 
 
 ```{r Part A Question 2}
 #Calculate the cumulative n for each school by student_group, grade, and academic_year.
 data <- data %>%
+  #need to arrange data before grouping 
+  arrange(school,student_group, grade_level, academic_year, level) %>% 
   #group data
   group_by(school,student_group, grade_level, academic_year) %>%
   #create cn variable
@@ -82,6 +90,7 @@ data <- data %>%
   filter(!is.na(hispanic_latino))
 
 
+
 ```
 
 ```{r Part B Question 1}
@@ -100,9 +109,9 @@ nested_data <- data %>%
   group_by(academic_year, district, school, grade_level) %>%
   nest()
 
-#loop through each data frame to calculate effect size - this part is not working yet
-data_new <- nested_data %>%
-  mutate(effect_size = map(data, ~gap(data, "white", "hispanic_latino")))
+#create achievement gap effect size by looping through each data frame
+nested_data %>% 
+  mutate(es = map_dbl(data, ~gap(.x, "white", "hispanic_latino")))
 
 ```
 
