@@ -83,14 +83,9 @@ data %<>%
   #clean names
   janitor::clean_names() %>%
   #filter out missing data
-  filter(!is.na(white))
-
-#Tried to do this in the pipe above but didn't work, not sure why so did it as a seperate step
-        
-data <- data %>%
-  filter(!is.na(hispanic_latino))
-
-
+  drop_na(white)%>%
+  drop_na(hispanic_latino)
+  
 
 ```
 
@@ -152,6 +147,8 @@ plotsB <- dat_b2 %>%
 #lets look at the first 5
 plotsB$plot[1:5]
 ```
+
+# Part B Question 3 
 
 ```{r Part B question 3}
 
