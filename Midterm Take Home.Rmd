@@ -144,11 +144,35 @@ plotsB <- dat_b2 %>%
           geom_col() + 
           scale_fill_distiller(palette = "YlGn")+
           coord_flip() + 
-          geom_hline(yintercept = 0, size = 1, color = "Violet") +
+          geom_hline(yintercept = 0, size = 1, color = "Blue") +
           theme(legend.position = "bottom", legend.key.width = unit(3, "cm"), legend.title = element_blank()) +
           theme_minimal() +
           labs(title = glue("Achievement Gap Estimates: {..2}"), subtitle = "Students coded as White as compared to those coded as Hispanic/Latino\n", caption = glue("{..4} School year, {..3} School District, Oregon"), y = "\nEffect Size", x = "Grade\n")))
 
-plotsB$plot[1:10]
+#lets look at the first 5
+plotsB$plot[1:5]
 ```
+
+```{r Part B question 3}
+
+plotsB2 <- plotsB%>% slice(1:20)
+
+save <- plotsB2 %>% 
+  unite(file, school, academic_year, sep = "_")
+
+fs::dir_create(here::here("Plots"))
+
+files <- save$file
+
+plot_s<- save$plot
+
+path <- here::here("Plots", glue("{files}.png"))
+
+walk2(path, plot_s, ggsave,
+      width = 10, 
+      height = 7.5,
+      dpi = 600)
+
+```
+
 
