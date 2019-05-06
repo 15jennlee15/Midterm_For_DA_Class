@@ -115,6 +115,19 @@ nested_data <- nested_data%>%
 
 ```
 
+```{r Part B Question 2}
 
+#nested and sliced data
 
+data_b2 <- nested_data %>% 
+  nest()%>% 
+  slice(1:100)
+
+#I need to get the district info so I create a function 
+district <- function (a) { a$district[[1]]}
+
+#try
+
+district(data_b2$data)
 ```
+
