@@ -53,7 +53,8 @@ data %<>%
 data <- data %>%
   mutate(academic_year = as.factor(academic_year),
          level = as.factor(level), 
-         grade_level = as.factor(grade_level))
+         grade_level = as.factor(grade_level))%>%
+  mutate(grade_level = str_replace_all(grade_level, "Grade", ""))
 
 ```
 
@@ -119,9 +120,9 @@ nested_data <- nested_data%>%
 
 ```
 
+# Part B: Question 2 
+
 ```{r Part B Question 2}
-
-
 
 #I need to get the district info so I create a function 
 district_f<- function (a) { 
@@ -131,11 +132,23 @@ district_f<- function (a) {
 dat_b2 <- nested_data %>%
   drop_na()%>%
   mutate(district = map_chr(data, district_f))%>%
+  mutate(district = str_replace_all(district, "SD", "")) %>%
   select(-data) %>% 
   group_by(school, district, academic_year) %>% 
   nest() %>% 
   slice(1:100)
 
+plotsB <- dat_b2 %>% 
+  mutate(plot = pmap(list(data, school, district, academic_year), ~
+          ggplot(..1, aes(grade_level, es, fill = es)) +
+          geom_col() + 
+          scale_fill_distiller(palette = "YlGn")+
+          coord_flip() + 
+          geom_hline(yintercept = 0, size = 1, color = "Violet") +
+          theme(legend.position = "bottom", legend.key.width = unit(3, "cm"), legend.title = element_blank()) +
+          theme_minimal() +
+          labs(title = glue("Achievement Gap Estimates: {..2}"), subtitle = "Students coded as White as compared to those coded as Hispanic/Latino\n", caption = glue("{..4} School year, {..3} School District, Oregon"), y = "\nEffect Size", x = "Grade\n")))
 
+plotsB$plot[1:10]
 ```
 
