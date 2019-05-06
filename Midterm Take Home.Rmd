@@ -152,9 +152,9 @@ plotsB$plot[1:5]
 
 ```{r Part B question 3}
 
-plotsB2 <- plotsB%>% slice(1:20)
+#plotsB2 <- plotsB%>% slice(1:20)
 
-save <- plotsB2 %>% 
+save <- plotsB %>% 
   unite(file, school, academic_year, sep = "_")
 
 fs::dir_create(here::here("Plots"))

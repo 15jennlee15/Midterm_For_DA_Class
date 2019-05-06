@@ -529,9 +529,9 @@ plotsB$plot[1:5]</code></pre>
 </div>
 <div id="part-b-question-3" class="section level1">
 <h1>Part B Question 3</h1>
-<pre class="r"><code>plotsB2 &lt;- plotsB%&gt;% slice(1:20)
+<pre class="r"><code>#plotsB2 &lt;- plotsB%&gt;% slice(1:20)
 
-save &lt;- plotsB2 %&gt;% 
+save &lt;- plotsB %&gt;% 
   unite(file, school, academic_year, sep = &quot;_&quot;)
 
 fs::dir_create(here::here(&quot;Plots&quot;))
