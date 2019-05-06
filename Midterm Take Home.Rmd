@@ -102,35 +102,39 @@ gap <- function(data, ref, foc) {
     sqrt(2)*qnorm(auc)
 }
 
+
+
 #Estimate an achievement gap effect size for every school in the state that reported data on both student groups (i.e., using the data we created above), for each grade level in each academic year.
 
 
 
-#group data and nest to create seperate data frames; 
+# nesting: 
 nested_data <- data %>%
-  group_by(academic_year, school, grade_level) %>%
-  nest()
+  nest(-academic_year, -school, -grade_level)
 
 #create achievement gap effect size by looping through each data frame
 nested_data <- nested_data%>% 
-  mutate(es = map_dbl(data, ~gap(.x, "white", "hispanic_latino")))
+  mutate(es = map_dbl(data, gap, "white", "hispanic_latino"))
+
 
 ```
 
 ```{r Part B Question 2}
 
-#nested and sliced data
 
-data_b2 <- nested_data %>% 
-  nest()%>% 
-  slice(1:100)
 
 #I need to get the district info so I create a function 
-district <- function (a) { a$district[[1]]}
+district_f<- function (a) { 
+  a[["district"]][1]}
 
-#try
-
-district(data_b2$data)
+#prepare data
+dat_b2 <- nested_data %>%
+  drop_na()%>%
+  mutate(district = map_chr(data, district_f))%>%
+  select(-data) %>% 
+  group_by(school, district, academic_year) %>% 
+  nest() %>% 
+  slice(1:100)
 
 
 ```
